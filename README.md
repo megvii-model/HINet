@@ -180,12 +180,12 @@ Some of the following results are higher than the original paper as we optimized
 
 
 <div align="center">
-<img src="./figures/NTIRE2021%20Deblur%20Track2%20Result.jpg" height="300px" alt="NTIRE2021 Deblur Track2 Result"><img src="./figures/SIDD%20Result.jpg" height="300px" alt="SIDD Result"><img src="./figures/GoPro%20Result.jpg" height="300px" alt="GoPro Result" >
+<img src="./figures/NTIRE2021%20Deblur%20Track2%20Result.jpg" height="270px" alt="NTIRE2021 Deblur Track2 Result"><img src="./figures/SIDD%20Result.jpg" height="270px" alt="SIDD Result"><img src="./figures/GoPro%20Result.jpg" height="270px" alt="GoPro Result" >
 </div>
 
 
 <div align="center">
-<img src="./figures/REDS%20Result.jpg" height="180px" alt="REDDS Result"><img src="./figures/Rain13k%20Result.jpg" height="180px" alt="Rain13k Result">
+<img src="./figures/REDS%20Result.jpg" height="150px" alt="REDDS Result"><img src="./figures/Rain13k%20Result.jpg" height="150px" alt="Rain13k Result">
 </div>
 
 
