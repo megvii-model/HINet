@@ -1,0 +1,104 @@
+# general settings
+name: REDS-HINet-xx
+model_type: ImageRestorationModel
+scale: 1
+num_gpu: 8  # set num_gpu: 0 for cpu mode
+manual_seed: 100
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: REDS
+    type: PairedImageDataset
+    dataroot_gt: ./datasets/REDS/train/train_sharp.lmdb
+    dataroot_lq: ./datasets/REDS/train/train_blur_jpeg.lmdb
+
+    filename_tmpl: '{}'
+    io_backend:
+      type: lmdb
+
+    gt_size: 256
+    use_flip: true
+    use_rot: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 8
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    name: REDS
+    type: PairedImageDataset
+    dataroot_gt: ./datasets/REDS/val/sharp_300.lmdb
+    dataroot_lq: ./datasets/REDS/val/blur_300.lmdb
+    io_backend:
+      type: lmdb
+
+# network structures
+network_g:
+  type: HINet
+  wf: 64
+  hin_position_left: 3
+  hin_position_right: 4
+
+
+# path
+path:
+  pretrain_network_g: ~
+  strict_load_g: true
+  resume_state: ~
+
+# training settings
+train:
+  optim_g:
+    type: Adam
+    lr: !!float 2e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: TrueCosineAnnealingLR
+    T_max: 400000
+    eta_min: !!float 1e-7
+
+  total_iter: 400000
+  warmup_iter: -1 # no warm up
+
+  # losses
+  pixel_opt:
+    type: PSNRLoss
+    loss_weight: 0.5
+    reduction: mean
+#    toY: true
+
+# validation settings
+val:
+#  val_freq: 10
+#  val_freq: !!float 2.5e4
+  val_freq: !!float 4e4
+  save_img: false
+  grids: true
+  crop_size: 256
+  max_minibatch: 8
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 50
+  save_checkpoint_freq: !!float 4e4
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
