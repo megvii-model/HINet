@@ -5,6 +5,7 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hinet-half-instance-normalization-network-for/single-image-deraining-on-test100)](https://paperswithcode.com/sota/single-image-deraining-on-test100?p=hinet-half-instance-normalization-network-for)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hinet-half-instance-normalization-network-for/single-image-deraining-on-test1200)](https://paperswithcode.com/sota/single-image-deraining-on-test1200?p=hinet-half-instance-normalization-network-for)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/hinet-half-instance-normalization-network-for/single-image-deraining-on-test2800)](https://paperswithcode.com/sota/single-image-deraining-on-test2800?p=hinet-half-instance-normalization-network-for)
+
 HINet: Half Instance Normalization Network for Image Restoration
 ---
 #### Liangyu Chen, Xin Lu, Jie Zhang, Xiaojie Chu, Chengpeng Chen
