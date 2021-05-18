@@ -43,8 +43,33 @@ python setup.py develop --no_cuda_ext
 
 Image denoise, deblur, derain.
 
-<details><summary>Image Denoise - SIDD dataset (Coming soon) </summary>
+<details><summary>Image Denoise - SIDD dataset (Click to expand) </summary>
 
+* prepare data
+
+  * ```mkdir ./datasets/SIDD ```
+  
+  * download the [train]( SIDD-Medium sRGB Dataset in https://www.eecs.yorku.ca/~kamel/sidd/dataset.php) set and unzip it. Then move Data (./SIDD_Medium_Srgb/Data) set to ./datasets/SIDD/ . Download [val](https://www.eecs.yorku.ca/~kamel/sidd/benchmark.php) files (ValidationNoisyBlocksSrgb.mat and ValidationGtBlocksSrgb.mat) in ./datasets/SIDD/ .
+  * it should be like:
+  
+    ```bash
+    ./datasets/SIDD/Data
+    ./datasets/SIDD/ValidationNoisyBlocksSrgb.mat
+    ./datasets/SIDD/ValidationGtBlocksSrgb.mat
+    ```
+  
+  * ```python scripts/data_preparation/sidd.py```
+  
+    * crop the train image pairs to 512x512 patches.
+
+
+* eval
+  * download [pretrained model](https://drive.google.com/file/d/1dw8PKVkLfISzNtUu3gqGh83NBO83ZQ5n/view?usp=sharing) to ./experiments/pretrained_models/HINet-SIDD-0.5x.pth/HINet-SIDD-1x.pth
+  * ```python basicsr/test.py -opt options/test/REDS/HINet-SIDD-0.5x.yml (HINet-SIDD-1x.yml) ```
+  
+* train
+
+  * ```python -m torch.distributed.launch --nproc_per_node=8 --master_port=4321 basicsr/train.py -opt options/train/SIDD/HINet.yml(HINet_0.5x.yml) --launcher pytorch```
 
 </details>
 
