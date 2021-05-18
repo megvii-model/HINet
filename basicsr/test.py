@@ -47,11 +47,15 @@ def main():
     for test_loader in test_loaders:
         test_set_name = test_loader.dataset.opt['name']
         logger.info(f'Testing {test_set_name}...')
+        rgb2bgr = opt['val'].get('rgb2bgr', True)
+        # wheather use uint8 image to compute metrics
+        use_image = opt['val'].get('use_image', True)
         model.validation(
             test_loader,
             current_iter=opt['name'],
             tb_logger=None,
-            save_img=opt['val']['save_img'])
+            save_img=opt['val']['save_img'],
+            rgb2bgr=rgb2bgr, use_image=use_image)
 
 
 if __name__ == '__main__':

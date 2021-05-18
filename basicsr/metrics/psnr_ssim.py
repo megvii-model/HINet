@@ -16,8 +16,8 @@ def calculate_psnr(img1,
     Ref: https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
 
     Args:
-        img1 (ndarray): Images with range [0, 255].
-        img2 (ndarray): Images with range [0, 255].
+        img1 (ndarray/tensor): Images with range [0, 255]/[0, 1].
+        img2 (ndarray/tensor): Images with range [0, 255]/[0, 1].
         crop_border (int): Cropped pixels in each edge of an image. These
             pixels are not involved in the PSNR calculation.
         input_order (str): Whether the input order is 'HWC' or 'CHW'.
@@ -34,6 +34,15 @@ def calculate_psnr(img1,
         raise ValueError(
             f'Wrong input_order {input_order}. Supported input_orders are '
             '"HWC" and "CHW"')
+    if type(img1) == torch.Tensor:
+        if len(img1.shape) == 4:
+            img1 = img1.squeeze(0)
+        img1 = img1.detach().cpu().numpy().transpose(1,2,0)
+    if type(img2) == torch.Tensor:
+        if len(img2.shape) == 4:
+            img2 = img2.squeeze(0)
+        img2 = img2.detach().cpu().numpy().transpose(1,2,0)
+        
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
     img1 = img1.astype(np.float64)
@@ -50,7 +59,8 @@ def calculate_psnr(img1,
     mse = np.mean((img1 - img2)**2)
     if mse == 0:
         return float('inf')
-    return 20. * np.log10(255. / np.sqrt(mse))
+    max_value = 1. if img1.max() <= 1 else 255.
+    return 20. * np.log10(max_value / np.sqrt(mse))
 
 
 def _ssim(img1, img2):
@@ -132,21 +142,21 @@ def _generate_3d_gaussian_kernel():
     conv3d.weight[0, 0, :, :, :] = kernel
     return conv3d
 
-def _ssim_3d(img1, img2):
+def _ssim_3d(img1, img2, max_value):
     assert len(img1.shape) == 3 and len(img2.shape) == 3
     """Calculate SSIM (structural similarity) for one channel images.
 
     It is called by func:`calculate_ssim`.
 
     Args:
-        img1 (ndarray): Images with range [0, 255] with order 'HWC'.
-        img2 (ndarray): Images with range [0, 255] with order 'HWC'.
+        img1 (ndarray): Images with range [0, 255]/[0, 1] with order 'HWC'.
+        img2 (ndarray): Images with range [0, 255]/[0, 1] with order 'HWC'.
 
     Returns:
         float: ssim result.
     """
-    C1 = (0.01 * 255) ** 2
-    C2 = (0.03 * 255) ** 2
+    C1 = (0.01 * max_value) ** 2
+    C2 = (0.03 * max_value) ** 2
     img1 = img1.astype(np.float64)
     img2 = img2.astype(np.float64)
 
@@ -247,6 +257,16 @@ def calculate_ssim(img1,
         raise ValueError(
             f'Wrong input_order {input_order}. Supported input_orders are '
             '"HWC" and "CHW"')
+
+    if type(img1) == torch.Tensor:
+        if len(img1.shape) == 4:
+            img1 = img1.squeeze(0)
+        img1 = img1.detach().cpu().numpy().transpose(1,2,0)
+    if type(img2) == torch.Tensor:
+        if len(img2.shape) == 4:
+            img2 = img2.squeeze(0)
+        img2 = img2.detach().cpu().numpy().transpose(1,2,0)
+
     img1 = reorder_image(img1, input_order=input_order)
     img2 = reorder_image(img2, input_order=input_order)
 
@@ -269,8 +289,9 @@ def calculate_ssim(img1,
     # skimage_before = skimage.metrics.structural_similarity(img1, img2, data_range=255., multichannel=True)
     # print('.._skimage',
     #       skimage.metrics.structural_similarity(img1, img2, data_range=255., multichannel=True))
+    max_value = 1 if img1.max() <= 1 else 255
     with torch.no_grad():
-        final_ssim = _ssim_3d(img1, img2)
+        final_ssim = _ssim_3d(img1, img2, max_value)
         ssims.append(final_ssim)
 
     # for i in range(img1.shape[2]):

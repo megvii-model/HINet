@@ -34,7 +34,7 @@ class BaseModel():
         """Save networks and training state."""
         pass
 
-    def validation(self, dataloader, current_iter, tb_logger, save_img=False):
+    def validation(self, dataloader, current_iter, tb_logger, save_img=False, rgb2bgr=True, use_image=True):
         """Validation function.
 
         Args:
@@ -42,12 +42,14 @@ class BaseModel():
             current_iter (int): Current iteration.
             tb_logger (tensorboard logger): Tensorboard logger.
             save_img (bool): Whether to save images. Default: False.
+            rgb2bgr (bool): Whether to save images using rgb2bgr. Default: True
+            use_image (bool): Whether to use saved images to compute metrics (PSNR, SSIM), if not, then use data directly from network' output. Default: True
         """
         if self.opt['dist']:
-            return self.dist_validation(dataloader, current_iter, tb_logger, save_img)
+            return self.dist_validation(dataloader, current_iter, tb_logger, save_img, rgb2bgr, use_image)
         else:
             return self.nondist_validation(dataloader, current_iter, tb_logger,
-                                    save_img)
+                                    save_img, rgb2bgr, use_image)
 
     def get_current_log(self):
         return self.log_dict

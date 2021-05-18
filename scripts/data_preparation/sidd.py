@@ -6,26 +6,28 @@ from multiprocessing import Pool
 from os import path as osp
 from tqdm import tqdm
 
-from basicsr.utils import scandir
+from basicsr.utils import scandir_SIDD
+from basicsr.utils.create_lmdb import create_lmdb_for_SIDD
 
 def main():
     opt = {}
     opt['n_thread'] = 20
     opt['compression_level'] = 3
 
-    # opt['input_folder'] = './datasets/GoPro/train/blur'
-    # opt['save_folder'] = './datasets/GoPro/train/blur_crops'
-    # opt['crop_size'] = 512
-    # opt['step'] = 256
+    opt['input_folder'] = './datasets/SIDD/Data'
+    opt['save_folder'] = './datasets/SIDD/train/input_crops'
+    opt['crop_size'] = 512
+    opt['step'] = 384
     opt['thresh_size'] = 0
+    opt['keywords'] = '_NOISY'
     extract_subimages(opt)
 
-    # opt['input_folder'] = './datasets/GoPro/train/sharp'
-    # opt['save_folder'] = './datasets/GoPro/train/sharp_crops'
-    # opt['crop_size'] = 512
-    # opt['step'] = 256
-    opt['thresh_size'] = 0
+    
+    opt['save_folder'] = './datasets/SIDD/train/gt_crops'
+    opt['keywords'] = '_GT'
     extract_subimages(opt)
+
+    create_lmdb_for_SIDD()
 
 def extract_subimages(opt):
     """Crop images to subimages.
@@ -43,9 +45,9 @@ def extract_subimages(opt):
         print(f'mkdir {save_folder} ...')
     else:
         print(f'Folder {save_folder} already exists. Exit.')
-        sys.exit(1)
+        #sys.exit(1)
 
-    img_list = list(scandir(input_folder, full_path=True))
+    img_list = list(scandir_SIDD(input_folder, keywords=opt['keywords'], recursive=True, full_path=True))
 
     pbar = tqdm(total=len(img_list), unit='image', desc='Extract')
     pool = Pool(opt['n_thread'])
@@ -79,11 +81,8 @@ def worker(path, opt):
     thresh_size = opt['thresh_size']
     img_name, extension = osp.splitext(osp.basename(path))
 
-    # remove the x2, x3, x4 and x8 in the filename for DIV2K
-    img_name = img_name.replace('x2',
-                                '').replace('x3',
-                                            '').replace('x4',
-                                                        '').replace('x8', '')
+    
+    img_name = img_name.replace(opt['keywords'], '')
 
     img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
 

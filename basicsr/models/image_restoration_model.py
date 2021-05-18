@@ -98,6 +98,7 @@ class ImageRestorationModel(BaseModel):
         self.lq = data['lq'].to(self.device)
         if 'gt' in data:
             self.gt = data['gt'].to(self.device)
+        
 
     def transpose(self, t, trans_idx):
         # print('transpose jt .. ', t.size())
@@ -226,7 +227,8 @@ class ImageRestorationModel(BaseModel):
         l_total = l_total + 0 * sum(p.sum() for p in self.net_g.parameters())
 
         l_total.backward()
-        torch.nn.utils.clip_grad_norm_(self.net_g.parameters(), 0.01)
+        if self.opt['train']['use_grad_clip']:
+            torch.nn.utils.clip_grad_norm_(self.net_g.parameters(), 0.01)
         self.optimizer_g.step()
 
 
@@ -253,17 +255,17 @@ class ImageRestorationModel(BaseModel):
             self.output = torch.cat(outs, dim=0)
         self.net_g.train()
 
-    def dist_validation(self, dataloader, current_iter, tb_logger, save_img):
+    def dist_validation(self, dataloader, current_iter, tb_logger, save_img, rgb2bgr, use_image):
         logger = get_root_logger()
         # logger.info('Only support single GPU validation.')
         import os
         if os.environ['LOCAL_RANK'] == '0':
-            return self.nondist_validation(dataloader, current_iter, tb_logger, save_img)
+            return self.nondist_validation(dataloader, current_iter, tb_logger, save_img, rgb2bgr, use_image)
         else:
             return 0.
 
     def nondist_validation(self, dataloader, current_iter, tb_logger,
-                           save_img):
+                           save_img, rgb2bgr, use_image):
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         if with_metrics:
@@ -291,9 +293,9 @@ class ImageRestorationModel(BaseModel):
                 self.grids_inverse()
 
             visuals = self.get_current_visuals()
-            sr_img = tensor2img([visuals['result']])
+            sr_img = tensor2img([visuals['result']], rgb2bgr=rgb2bgr)
             if 'gt' in visuals:
-                gt_img = tensor2img([visuals['gt']])
+                gt_img = tensor2img([visuals['gt']], rgb2bgr=rgb2bgr)
                 del self.gt
 
             # tentative for out of GPU memory
@@ -302,30 +304,42 @@ class ImageRestorationModel(BaseModel):
             torch.cuda.empty_cache()
 
             if save_img:
+                
                 if self.opt['is_train']:
+                    
                     save_img_path = osp.join(self.opt['path']['visualization'],
                                              img_name,
                                              f'{img_name}_{current_iter}.png')
+                    
+                    save_gt_img_path = osp.join(self.opt['path']['visualization'],
+                                             img_name,
+                                             f'{img_name}_{current_iter}_gt.png')
                 else:
-                    # if self.opt['val']['suffix']:
-                    #     save_img_path = osp.join(
-                    #         self.opt['path']['visualization'], dataset_name,
-                    #         f'{img_name}_{self.opt["val"]["suffix"]}.png')
-                    # else:
+                    
                     save_img_path = osp.join(
                         self.opt['path']['visualization'], dataset_name,
                         f'{img_name}.png')
-                    # print('save_img_path', save_img_path)
-                    # exit(0)
+                    save_gt_img_path = osp.join(
+                        self.opt['path']['visualization'], dataset_name,
+                        f'{img_name}_gt.png')
+                    
                 imwrite(sr_img, save_img_path)
+                imwrite(gt_img, save_gt_img_path)
 
             if with_metrics:
                 # calculate metrics
                 opt_metric = deepcopy(self.opt['val']['metrics'])
-                for name, opt_ in opt_metric.items():
-                    metric_type = opt_.pop('type')
-                    self.metric_results[name] += getattr(
-                        metric_module, metric_type)(sr_img, gt_img, **opt_)
+                if use_image:
+                    for name, opt_ in opt_metric.items():
+                        metric_type = opt_.pop('type')
+                        self.metric_results[name] += getattr(
+                            metric_module, metric_type)(sr_img, gt_img, **opt_)
+                else:
+                    for name, opt_ in opt_metric.items():
+                        metric_type = opt_.pop('type')
+                        self.metric_results[name] += getattr(
+                            metric_module, metric_type)(visuals['result'], visuals['gt'], **opt_)
+
             pbar.update(1)
             pbar.set_description(f'Test {img_name}')
             cnt += 1
