@@ -64,12 +64,13 @@ Image denoise, deblur, derain.
 
 
 * eval
-  * download [pretrained model](https://drive.google.com/file/d/1dw8PKVkLfISzNtUu3gqGh83NBO83ZQ5n/view?usp=sharing) to ./experiments/pretrained_models/HINet-SIDD-0.5x.pth (HINet-SIDD-1x.pth) (we use the output computing directly from hinet to avoid the psnr loss caused by the "round()" operation, which is the same way using in other networks. For SSIM, our results are higher than those of MATLAB, so only PSNR is reported here)
+  * download [pretrained model](https://drive.google.com/file/d/1Y5YJQVNL0weifE--5us344bLwzBNS_sU/view?usp=sharing, https://drive.google.com/file/d/1CU5z-M90Jc-TAcVpEaFjDCYA09fkubGi/view?usp=sharing) to ./experiments/pretrained_models/HINet-SIDD-0.5x.pth (HINet-SIDD-1x.pth)  (we use the output computing directly from hinet to avoid the psnr loss caused by the "round()" operation, which is the same way using in other networks. For SSIM, our results are higher than those of MATLAB, so only PSNR is reported here)
   * ```python basicsr/test.py -opt options/test/REDS/HINet-SIDD-0.5x.yml (HINet-SIDD-1x.yml) ```
   
 * train
 
   * ```python -m torch.distributed.launch --nproc_per_node=8 --master_port=4321 basicsr/train.py -opt options/train/SIDD/HINet.yml(HINet_0.5x.yml) --launcher pytorch```
+  * data in lmdb format will lose about 0.01 value in PSNR
 
 </details>
 
