@@ -102,7 +102,7 @@ Image denoise, deblur, derain.
 
 * eval
   * download [pretrained model](https://drive.google.com/file/d/1dw8PKVkLfISzNtUu3gqGh83NBO83ZQ5n/view?usp=sharing) to ./experiments/pretrained_models/HINet-GoPro.pth
-  * ```python basicsr/test.py -opt options/test/REDS/HINet-GoPro.yml  ```
+  * ```python basicsr/test.py -opt options/test/GoPro/HINet-GoPro.yml  ```
   
 * train
 
