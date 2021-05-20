@@ -227,7 +227,8 @@ class ImageRestorationModel(BaseModel):
         l_total = l_total + 0 * sum(p.sum() for p in self.net_g.parameters())
 
         l_total.backward()
-        if self.opt['train']['use_grad_clip']:
+        use_grad_clip = self.opt['train'].get('use_grad_clip', True)
+        if use_grad_clip:
             torch.nn.utils.clip_grad_norm_(self.net_g.parameters(), 0.01)
         self.optimizer_g.step()
 
