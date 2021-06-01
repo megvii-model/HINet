@@ -225,7 +225,11 @@ Some of the following results are higher than the original paper as we optimized
 
 
 
+### LICENSE
 
+---
+
+This project is under the MIT license, and it is based on [BasicSR](https://github.com/xinntao/BasicSR) which is under the Apache 2.0 license.
 
 
 ### Citations

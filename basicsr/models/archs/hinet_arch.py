@@ -1,3 +1,6 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2021 megvii-model. All Rights Reserved.
+# ------------------------------------------------------------------------
 '''
 HINet: Half Instance Normalization Network for Image Restoration
 
