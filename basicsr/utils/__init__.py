@@ -1,3 +1,9 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2021 megvii-model. All Rights Reserved.
+# ------------------------------------------------------------------------
+# Modified from BasicSR (https://github.com/xinntao/BasicSR)
+# Copyright 2018-2020 BasicSR Authors
+# ------------------------------------------------------------------------
 from .file_client import FileClient
 from .img_util import crop_border, imfrombytes, img2tensor, imwrite, tensor2img, padding
 from .logger import (MessageLogger, get_env_info, get_root_logger,
