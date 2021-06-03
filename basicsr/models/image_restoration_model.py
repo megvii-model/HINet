@@ -122,6 +122,7 @@ class ImageRestorationModel(BaseModel):
 
     def grids(self):
         b, c, h, w = self.lq.size()
+        self.original_size = self.lq.size()
         assert b == 1
         crop_size = self.opt['val'].get('crop_size')
         # step_j = self.opt['val'].get('step_j', crop_size)
@@ -182,9 +183,12 @@ class ImageRestorationModel(BaseModel):
         self.idxes = idxes
 
     def grids_inverse(self):
-        preds = torch.zeros_like(self.gt)
-        b, c, h, w = self.gt.size()
-        count_mt = torch.zeros((b, 1, h, w)).to(self.gt.device)
+        preds = torch.zeros(self.original_size).to(self.device)
+        b, c, h, w = self.original_size
+
+        print('...', self.device)
+
+        count_mt = torch.zeros((b, 1, h, w)).to(self.device)
         crop_size = self.opt['val'].get('crop_size')
 
         for cnt, each_idx in enumerate(self.idxes):
@@ -261,6 +265,21 @@ class ImageRestorationModel(BaseModel):
 
             self.output = torch.cat(outs, dim=0)
         self.net_g.train()
+
+    def single_image_inference(self, img, save_path):
+        self.feed_data(data={'lq': img.unsqueeze(dim=0)})
+
+        if self.opt['val'].get('grids') is not None:
+            self.grids()
+
+        self.test()
+
+        if self.opt['val'].get('grids') is not None:
+            self.grids_inverse()
+
+        visuals = self.get_current_visuals()
+        sr_img = tensor2img([visuals['result']])
+        imwrite(sr_img, save_path)
 
     def dist_validation(self, dataloader, current_iter, tb_logger, save_img, rgb2bgr, use_image):
         logger = get_root_logger()

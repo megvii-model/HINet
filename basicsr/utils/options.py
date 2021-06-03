@@ -51,16 +51,17 @@ def parse(opt_path, is_train=True):
     opt['is_train'] = is_train
 
     # datasets
-    for phase, dataset in opt['datasets'].items():
-        # for several datasets, e.g., test_1, test_2
-        phase = phase.split('_')[0]
-        dataset['phase'] = phase
-        if 'scale' in opt:
-            dataset['scale'] = opt['scale']
-        if dataset.get('dataroot_gt') is not None:
-            dataset['dataroot_gt'] = osp.expanduser(dataset['dataroot_gt'])
-        if dataset.get('dataroot_lq') is not None:
-            dataset['dataroot_lq'] = osp.expanduser(dataset['dataroot_lq'])
+    if 'datasets' in opt:
+        for phase, dataset in opt['datasets'].items():
+            # for several datasets, e.g., test_1, test_2
+            phase = phase.split('_')[0]
+            dataset['phase'] = phase
+            if 'scale' in opt:
+                dataset['scale'] = opt['scale']
+            if dataset.get('dataroot_gt') is not None:
+                dataset['dataroot_gt'] = osp.expanduser(dataset['dataroot_gt'])
+            if dataset.get('dataroot_lq') is not None:
+                dataset['dataroot_lq'] = osp.expanduser(dataset['dataroot_lq'])
 
     # paths
     for key, val in opt['path'].items():
