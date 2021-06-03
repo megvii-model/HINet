@@ -1,3 +1,9 @@
+# ------------------------------------------------------------------------
+# Copyright (c) 2021 megvii-model. All Rights Reserved.
+# ------------------------------------------------------------------------
+# Modified from BasicSR (https://github.com/xinntao/BasicSR)
+# Copyright 2018-2020 BasicSR Authors
+# ------------------------------------------------------------------------
 import argparse
 import datetime
 import logging
@@ -262,8 +268,10 @@ def main():
     logger.info('Save the latest model.')
     model.save(epoch=-1, current_iter=-1)  # -1 stands for the latest
     if opt.get('val') is not None:
+        rgb2bgr = opt['val'].get('rgb2bgr', True)
+        use_image = opt['val'].get('use_image', True)
         model.validation(val_loader, current_iter, tb_logger,
-                         opt['val']['save_img'])
+                         opt['val']['save_img'], rgb2bgr, use_image)
     if tb_logger:
         tb_logger.close()
 

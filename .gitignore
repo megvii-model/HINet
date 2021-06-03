@@ -1,8 +1,8 @@
+.gitignore
 */__pycache__
 */*/__pycache__
 */*/*/__pycache__
 datasets/SIDD/
 experiments/
 results/
-.gitignore
-.idea/*
+.idea/
