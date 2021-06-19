@@ -241,11 +241,13 @@ This project is under the MIT license, and it is based on [BasicSR](https://gith
 
 If HINet helps your research or work, please consider citing HINet.
 ```
-@inproceedings{chen2021hinet,
-  title={HINet: Half Instance Normalization Network for Image Restoration},
-  author={Liangyu Chen and Xin Lu and Jie Zhang and Xiaojie Chu and Chengpeng Chen},
-  booktitle={IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops},
-  year={2021}
+@InProceedings{Chen_2021_CVPR,
+    author    = {Chen, Liangyu and Lu, Xin and Zhang, Jie and Chu, Xiaojie and Chen, Chengpeng},
+    title     = {HINet: Half Instance Normalization Network for Image Restoration},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+    month     = {June},
+    year      = {2021},
+    pages     = {182-192}
 }
 ```
 
