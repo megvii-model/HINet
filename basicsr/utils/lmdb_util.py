@@ -68,7 +68,7 @@ def make_lmdb_from_imgs(data_path,
         'img_path_list and keys should have the same length, '
         f'but got {len(img_path_list)} and {len(keys)}')
     print(f'Create lmdb for {data_path}, save to {lmdb_path}...')
-    print(f'Totoal images: {len(img_path_list)}')
+    print(f'Total images: {len(img_path_list)}')
     if not lmdb_path.endswith('.lmdb'):
         raise ValueError("lmdb_path must end with '.lmdb'.")
     if osp.exists(lmdb_path):
