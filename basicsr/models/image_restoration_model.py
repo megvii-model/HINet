@@ -269,12 +269,12 @@ class ImageRestorationModel(BaseModel):
     def single_image_inference(self, img, save_path):
         self.feed_data(data={'lq': img.unsqueeze(dim=0)})
 
-        if self.opt['val'].get('grids') is not None:
+        if self.opt['val'].get('grids', False):
             self.grids()
 
         self.test()
 
-        if self.opt['val'].get('grids') is not None:
+        if self.opt['val'].get('grids', False):
             self.grids_inverse()
 
         visuals = self.get_current_visuals()
@@ -310,12 +310,12 @@ class ImageRestorationModel(BaseModel):
 
             # print('val_data .. ', val_data['lq'].size(), val_data['gt'].size())
             self.feed_data(val_data)
-            if self.opt['val'].get('grids') is not None:
+            if self.opt['val'].get('grids', False):
                 self.grids()
 
             self.test()
 
-            if self.opt['val'].get('grids') is not None:
+            if self.opt['val'].get('grids', False):
                 self.grids_inverse()
 
             visuals = self.get_current_visuals()
