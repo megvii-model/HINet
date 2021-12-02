@@ -186,8 +186,6 @@ class ImageRestorationModel(BaseModel):
         preds = torch.zeros(self.original_size).to(self.device)
         b, c, h, w = self.original_size
 
-        print('...', self.device)
-
         count_mt = torch.zeros((b, 1, h, w)).to(self.device)
         crop_size = self.opt['val'].get('crop_size')
 
