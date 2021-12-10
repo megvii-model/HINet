@@ -15,7 +15,8 @@ HINet: Half Instance Normalization Network for Image Restoration
 ### Network Architecture
 <img src="figures/pipeline.png" alt="arch" style="zoom:100%;" />
 
-
+### News
+Our new work, [**Revisiting Global Statistics Aggregation for Improving Image Restoration**](https://arxiv.org/pdf/2112.04491.pdf), exceeds the previous SOTA restorers **0.6** dB (GoPro dataset) **without** re-train the model. It is accomplished by revealing the feature distribution shifts issue from training phase to testing phase. The paper and the code are available at https://arxiv.org/pdf/2112.04491.pdf / https://github.com/megvii-research/tlsc respectively. 
 
 ### Installation
 
