@@ -19,7 +19,7 @@ HINet: Half Instance Normalization Network for Image Restoration
 ### News
 **2022.04.12** Our new work, [**Simple Baselines for Image Restoration**](https://arxiv.org/abs/2204.04676) reveals the nonlinear activation functions, e.g. ReLU, GELU, Sigmoid, and etc. are **not necessary** to achieve SOTA performance. The paper provide a simple baseline, NAFNet: Nonlinear Activation Free Network for Image Restoration tasks, and acheves SOTA performance on Image Denoising and Image Deblurring. The paper and the code are available at https://arxiv.org/abs/2204.04676 / https://github.com/megvii-research/NAFNet respectively.
 
-**2021.12.10** Our new work, [**Revisiting Global Statistics Aggregation for Improving Image Restoration**](https://arxiv.org/abc/2112.04491), exceeds the previous SOTA restorers **0.6** dB (GoPro dataset) **without** re-train the model. It is accomplished by revealing the feature distribution shifts issue from training phase to testing phase. The paper and the code are available at https://arxiv.org/pdf/2112.04491.pdf / https://github.com/megvii-research/tlsc respectively. 
+**2021.12.10** Our new work, [**Revisiting Global Statistics Aggregation for Improving Image Restoration**](https://arxiv.org/abs/2112.04491), exceeds the previous SOTA restorers **0.6** dB (GoPro dataset) **without** re-train the model. It is accomplished by revealing the feature distribution shifts issue from training phase to testing phase. The paper and the code are available at https://arxiv.org/abs/2112.04491 / https://github.com/megvii-research/tlsc respectively. 
 
 ### Installation
 
